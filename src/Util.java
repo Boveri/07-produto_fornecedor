@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+
 import static javax.swing.JOptionPane.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.Double.parseDouble;
@@ -26,12 +28,22 @@ public class Util {
                     pesquisarProduto();
                     break;
                 case 3:
-                    pesquisarFornecedor();
+                    pesquisar();
                     break;
                 }
             }
         }while(opcao != 4);
 
+    }
+
+    private void pesquisar(){
+        Fornecedor fornecedor = pesquisarFornecedor();
+        if(fornecedor != null){
+            String aux = "";
+            aux += "Fornecedor: "+fornecedor.getNome()+"\n";
+            aux += "CNPJ: "+fornecedor.getCnpj()+"\n";
+            showMessageDialog(null, aux);
+        }
     }
 
     private void cadastrarProduto(){
@@ -41,7 +53,7 @@ public class Util {
         Fornecedor fornecedor = pesquisarFornecedor();
 
         if(fornecedor == null){
-            cadastrarFornecedor();
+            fornecedor = cadastrarFornecedor();
         }
         nome = showInputDialog("Nome do produto");
         valor = parseDouble(showInputDialog("Valor unitário"));
@@ -59,7 +71,20 @@ public class Util {
         return fornecedor;
     }
 
-    private int pesquisarProduto(){}
+    private void pesquisarProduto(){
+        DecimalFormat df = new DecimalFormat("0.00");
+        String aux = "Produto não encontrado";
+        String nome=showInputDialog("Nome do produto");
+        for (int i=0; i<indexP; i++){
+            if(produto[i].getNome().equalsIgnoreCase(nome)){
+             aux = "";
+             aux += "Nome do produto: "+nome+"\n";
+             aux += "Valor do produto: "+df.format(produto[i].getValor())+"\n";
+             aux += "Fornecedor: "+produto[i].getFornecedor().getNome()+"\n";
+            }
+        }
+        showMessageDialog(null, aux);
+    }
 
     private Fornecedor pesquisarFornecedor(){
         int cnpj = parseInt(showInputDialog("CNPJ do fornecedor"));
